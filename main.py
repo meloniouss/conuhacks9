@@ -1,16 +1,35 @@
-# This is a sample Python script.
+import threading
+import time
+from Factions import Faction
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+fact1 = Faction(name="Red")
+fact2 = Faction(name="Blue")
+fact3 = Faction(name="Green")
+
+factions = [fact1, fact2, fact3]
+
+for x in range(10):
+    for faction in factions:
+        faction.addMember()
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+def ageTimer(a, message):
+    while True:
+        time.sleep(a)
+        message(a)
+        for faction in factions:
+            faction.incrementAge()
+            faction.calculateFactionStats()
+            faction.printFactionStats()
 
+def ageMessage(a):
+    print("\n\n{} minutes have passed. Increasing all entity ages by one...".format(a/60))
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    ageThread = threading.Thread(target = ageTimer, args = (1, ageMessage), daemon = True)
+    ageThread.start()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    while True:
+        print("Main program is running...")
+        time.sleep(60)  # Simulating other tasks
+
